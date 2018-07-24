@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+     <title>Escrow Smart Contract</title>
+
+     <!-- Bootstrap -->
+     <link href="css/bootstrap.min.css" rel="stylesheet">
+
+     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+     <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+     <!-- Application -->
+     <link href="css/app.css" rel="stylesheet">
+
+</head>
+
+<body>
+  <div class="container">
+          <div class="jumbotron text-center">
+               <h1>Escrow Smart Contract</h1>
+          </div>
+
+
+
+        <div class="col-md-12" id="plede-list">
+          <div class="row">
+            <div class="col-lg-12">
+              <p id="account" class="welcome pull-left"></p>
+              <p id="accountBalance" class="welcome pull-right"></p>
+            </div>
+          </div>
+            <div class="row">
+              <div class="col-lg-12">
+                <p id="retokenPrice" class="welcome pull-left"></p>
+                <p id="retokenBalance" class="welcome pull-right"></p>
+              </div>
+            </div>
+
+          <div class="row panel panel-default">
+            <div class="panel-heading clearfix">
+              <div class="panel-title">
+                <button class="btn btn-info btn-lg pull-left" data-toggle="modal" data-target="#buyRETokens">Buy RET</button>
+                <button class="btn btn-info btn-lg pull-left" data-toggle="modal" data-target="#sellRETokens">Sell RET</button>
+
+                  <button class="btn btn-info btn-lg pull-right" data-toggle="modal" data-target="#putInPledge">Создать залог</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="row panel panel-default">
+            <div class="panel-heading clearfix">
+              <div class="panel-title">
+                <button class="btn btn-info btn-lg pull-left" data-toggle="collapse" data-target="#events" aria-expanded="false" aria-controls="events">Events</button>
+              </div>
+            </div>
+            <ul id="events" class="collapse list-group"></ul>
+          </div>
+
+          <div id="pledgesRow" class="row">
+            <!-- PLEDGES LOAD HERE -->
+          </div>
+        </div>
+     </div>
+
+
+
+
+    <div id="pledgeTemplate" style="display: none;">
+      <div class="row-lg-12">
+        <div class="panel panel-default panel-article">
+          <div class="panel-heading">
+            <h3 class="panel-title"></h3>
+          </div>
+          <div class="panel-body">
+            <strong>Арендатор</strong>: <span class="pledge-renter"></span><br/>
+            <strong>Домовладелец</strong>: <span class="pledge-houseowner"></span><br/>
+            <strong>Сумма</strong>: <span class="pledge-amount"></span><br/>
+          </div>
+          <div class="panel-footer">
+            <button type="button" class="btn btn-primary btn-success btn-pick_up" onclick="App.pickUpPledge(event); return false;">Забрать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+  <!-- Modal form to buy RET -->
+  <div class="modal fade" id="buyRETokens" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Buy RET</h4>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-12">
+              <form>
+                <div class="form-group">
+                  <label for="price">RET amount</label>
+                  <input type="number" class="form-control" id="retoken_amount" value="5" pattern="[0-9]+([\.,][0-9]+)?" step="1">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-success" data-dismiss="modal" onclick="App.buyRETokens(); return false;">Submit</button>
+          <button type="button" class="btn" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    <!-- Modal form to sell RET -->
+    <div class="modal fade" id="sellRETokens" role="dialog">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Sell RET</h4>
+          </div>
+
+          <div class="modal-body">
+
+            <div class="row">
+              <div class="col-lg-12">
+                <form>
+                  <div class="form-group">
+                    <label for="price">RET amount</label>
+                    <input type="number" class="form-control" id="sell_retoken_amount" value="5" pattern="[0-9]+([\.,][0-9]+)?" step="1">
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-success" data-dismiss="modal" onclick="App.sellRETokens(); return false;">Submit</button>
+            <button type="button" class="btn" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+      <!-- Modal form to put in pledge -->
+      <div class="modal fade" id="putInPledge" role="dialog">
+        <div class="modal-dialog">
+
+          <!-- Modal content-->
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Создать залог</h4>
+            </div>
+
+            <div class="modal-body">
+
+              <div class="row">
+                <div class="col-lg-12">
+                  <form>
+                    <div class="form-group">
+                      <label for="price">RET amount</label>
+                      <input type="number" class="form-control" id="put_retoken_amount" value="5" pattern="[0-9]+([\.,][0-9]+)?" step="1">
+                    </div>
+                      <div class="form-group">
+                        <label for="houseowner">Адресс домовладельца</label>
+                        <input type="text" class="form-control" id="houseowner" value="">
+                      </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary btn-success" data-dismiss="modal" onclick="App.putInPledge(); return false;">Submit</button>
+              <button type="button" class="btn" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
+
+
+     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+     <!-- Include all compiled plugins (below), or include individual files as needed -->
+     <script src="js/bootstrap.min.js"></script>
+     <script src="js/web3.min.js"></script>
+     <script src="js/truffle-contract.js"></script>
+     <script src="js/app.js"></script>
+</body>
+
+</html>
